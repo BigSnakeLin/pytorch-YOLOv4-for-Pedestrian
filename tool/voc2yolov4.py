@@ -22,13 +22,15 @@ for i in range(len(file_path)):
                 y1 = bnd_box.find('ymin').text
                 x2 = bnd_box.find('xmax').text
                 y2 = bnd_box.find('ymax').text
-                f.write(x1 + ',' + y1 + ',' + x2 + ',' + y2 + ',')
+                
                 if obj.find('name').text == 'person':
+                  f.write(x1 + ',' + y1 + ',' + x2 + ',' + y2 + ',')
                   if start != end:
                     f.write('1' + ' ')
                   else:
                     f.write('1')
                 elif obj.find('name').text == 'person-like' or obj.find('name').text == 'person-fa':
+                  f.write(x1 + ',' + y1 + ',' + x2 + ',' + y2 + ',')
                   if start != end:
                     f.write('0' + ' ')
                   else:
