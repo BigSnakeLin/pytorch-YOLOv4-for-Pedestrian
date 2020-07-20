@@ -1,4 +1,4 @@
-# Pytorch-YOLOv4
+# Pytorch-YOLOv4-For Pedestrain Detection
 
 ![](https://img.shields.io/static/v1?label=python&message=3.6|3.7&color=blue)
 ![](https://img.shields.io/static/v1?label=pytorch&message=1.4&color=<COLOR>)
@@ -54,6 +54,11 @@ you can use darknet2pytorch to convert it yourself, or download my converted mod
 - google
     - yolov4.pth(https://drive.google.com/open?id=1wv_LiFeCRYwtpkqREPeI13-gPELBDwuJ)
     - yolov4.conv.137.pth(https://drive.google.com/open?id=1fcbR0bWzYfIEdLJPzOsn4R5mlvR6IQyA)
+    
+## 0.3 Pedestrain-pytorch
+
+-google
+    -YOLOv4-For-Pedestrain.pth()
 
 # 1. Train for Pedestrain Dataset
 
@@ -77,8 +82,13 @@ you can use darknet2pytorch to convert it yourself, or download my converted mod
     ...
     ```
     For Pedestrain Dataset(kaggle Pedestrain Dataset and CUHK Occlusion Dataset)
+    ```
     Dataset Download goole drive:()
-    For CUHK Occlusion Dataset,using tool/vbb2voc.py,then get voc .xml file,so you can use tool/voc_annotation.py
+    For CUHK Occlusion Dataset
+    using tool/vbb2voc.py
+    then get voc .xml file
+    so you can use tool/voc_annotation.py
+    ```
     
 3. Train
 
@@ -114,6 +124,8 @@ you can use darknet2pytorch to convert it yourself, or download my converted mod
 
         ```sh
         python models.py <num_classes> <weightfile> <imgfile> <IN_IMAGE_H> <IN_IMAGE_W> <namefile(optional)>
+        python models.py 2 checkpoints/Yolov4_epoch.pth data/dog.jpg 320 320
+        python Video.py 2 checkpoints/Yolov4_epoch.pth data/Pedestrians.mp4 320 320 data/pedestrain.names
         ```
     
     - Load converted ONNX file to do inference (See section 3 and 4)
