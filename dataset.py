@@ -256,6 +256,8 @@ class Yolo_dataset(Dataset):
         f = open(lable_path, 'r', encoding='utf-8')
         for line in f.readlines():
             data = line.split(" ")
+            if data[-1] == '\n':#avoid object for some picture
+                continue
             truth[data[0]] = []
             for i in data[1:]:
                 truth[data[0]].append([int(j) for j in i.split(',')])
