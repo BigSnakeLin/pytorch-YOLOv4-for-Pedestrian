@@ -129,7 +129,7 @@ you can use darknet2pytorch to convert it yourself, or download my converted mod
         ```sh
         python models.py <num_classes> <weightfile> <imgfile> <IN_IMAGE_H> <IN_IMAGE_W> <namefile(optional)>
         python models.py 2 checkpoints/Yolov4_epoch.pth data/dog.jpg 320 320
-        python Video.py 2 checkpoints/Yolov4_epoch.pth data/Pedestrians.mp4 320 320 data/pedestrain.names
+        python video.py 2 checkpoints/Yolov4_epoch.pth data/Pedestrians.mp4 320 320 data/pedestrain.names
         ```
     
     - Load converted ONNX file to do inference (See section 3 and 4)
