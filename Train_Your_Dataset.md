@@ -67,7 +67,7 @@ filters = 21((5+classes)*3)
 # 5. 验证
 
 ```
-python Video.py 2 checkpoints/Yolov4_epoch150.pth data/Pedestrians.mp4 320 320 data/pedestrain.names
+python video.py 2 checkpoints/Yolov4_epoch150.pth data/Pedestrians.mp4 320 320 data/pedestrain.names
 python models.py 2 checkpoints/Yolov4_epoch150.pth data/people.jpg 320 320
 
 python models.py num_classes weightfile imagepath namefile
