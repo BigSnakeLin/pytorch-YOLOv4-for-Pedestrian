@@ -35,8 +35,8 @@ Cfg.hue = .1
 
 Cfg.learning_rate = 0.00261
 Cfg.burn_in = 1000
-Cfg.max_batches = 500500
-Cfg.steps = [400000, 450000]
+Cfg.max_batches = 12000
+Cfg.steps = [8000, 10800]
 Cfg.policy = Cfg.steps
 Cfg.scales = .1, .1
 
@@ -73,6 +73,6 @@ elif Cfg.mosaic:
 Cfg.checkpoints = os.path.join(_BASE_DIR, 'checkpoints')
 Cfg.TRAIN_TENSORBOARD_DIR = os.path.join(_BASE_DIR, 'log')
 
-Cfg.iou_type = 'iou'  # 'giou', 'diou', 'ciou'
+Cfg.iou_type = 'ciou'  # 'giou', 'diou', 'ciou'
 
-Cfg.keep_checkpoint_max = 10
+Cfg.keep_checkpoint_max = 2
