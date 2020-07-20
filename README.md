@@ -87,7 +87,7 @@ you can use darknet2pytorch to convert it yourself, or download my converted mod
     ```
     For Pedestrain Dataset(kaggle Pedestrain Dataset and CUHK Occlusion Dataset)
     ```
-    Dataset Download goole drive:()
+    Dataset Download goole drive:(https://drive.google.com/file/d/1H4FjN9iiYrD6Gt0K4O3EvVRjrBBC9MG1/view?usp=sharing and https://drive.google.com/file/d/1AwhtUVv8bwpltldoKjW6uF4UYVdrspdW/view?usp=sharing)
     For CUHK Occlusion Dataset
     using tool/vbb2voc.py
     then get voc .xml file
