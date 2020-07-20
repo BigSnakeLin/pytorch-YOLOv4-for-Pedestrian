@@ -128,7 +128,7 @@ def bboxes_iou(bboxes_a, bboxes_b, xyxy=True, GIoU=False, DIoU=False, CIoU=False
 
 
 class Yolo_loss(nn.Module):
-    def __init__(self, n_classes=80, n_anchors=3, device=None, batch=2):
+    def __init__(self, n_classes=2, n_anchors=3, device=None, batch=2):
         super(Yolo_loss, self).__init__()
         self.device = device
         self.strides = [8, 16, 32]
@@ -360,6 +360,7 @@ def train(model, device, config, epochs=5, batch_size=1, save_cp=True, log_step=
 
     save_prefix = 'Yolov4_epoch'
     saved_models = deque()
+    save_models2 = deque()
     model.train()
     for epoch in range(epochs):
         # model.train()
@@ -378,7 +379,7 @@ def train(model, device, config, epochs=5, batch_size=1, save_cp=True, log_step=
 
                 bboxes_pred = model(images)
                 loss, loss_xy, loss_wh, loss_obj, loss_cls, loss_l2 = criterion(bboxes_pred, bboxes)
-                # loss = loss / config.subdivisions
+                loss = loss / config.subdivisions
                 loss.backward()
 
                 epoch_loss += loss.item()
@@ -404,7 +405,7 @@ def train(model, device, config, epochs=5, batch_size=1, save_cp=True, log_step=
                                         'lr': scheduler.get_lr()[0] * config.batch
                                         })
                     logging.debug('Train step_{}: loss : {},loss xy : {},loss wh : {},'
-                                  'loss obj : {}，loss cls : {},loss l2 : {},lr : {}'
+                                  'loss obj : {}ï¼Œloss cls : {},loss l2 : {},lr : {}'
                                   .format(global_step, loss.item(), loss_xy.item(),
                                           loss_wh.item(), loss_obj.item(),
                                           loss_cls.item(), loss_l2.item(),
@@ -436,7 +437,7 @@ def train(model, device, config, epochs=5, batch_size=1, save_cp=True, log_step=
             writer.add_scalar('train/AR_medium', stats[10], global_step)
             writer.add_scalar('train/AR_large', stats[11], global_step)
 
-            if save_cp:
+            if save_cp and epoch%100 == 0:
                 try:
                     # os.mkdir(config.checkpoints)
                     os.makedirs(config.checkpoints, exist_ok=True)
@@ -444,13 +445,18 @@ def train(model, device, config, epochs=5, batch_size=1, save_cp=True, log_step=
                 except OSError:
                     pass
                 save_path = os.path.join(config.checkpoints, f'{save_prefix}{epoch + 1}.pth')
+                save_path2 = os.path.join('/content/drive/My Drive/pytorch-YOLOv4/checkpoints', f'{save_prefix}{epoch + 1}.pth')
                 torch.save(model.state_dict(), save_path)
+                torch.save(model.state_dict(),save_path2)
                 logging.info(f'Checkpoint {epoch + 1} saved !')
                 saved_models.append(save_path)
+                save_models2.append(save_path2)
                 if len(saved_models) > config.keep_checkpoint_max > 0:
                     model_to_remove = saved_models.popleft()
+                    model_to_remove2 = save_models2.popleft()
                     try:
                         os.remove(model_to_remove)
+                        os.remove(model_to_remove2)
                     except:
                         logging.info(f'failed to remove {model_to_remove}')
 
@@ -546,7 +552,7 @@ def get_args(**kwargs):
         help='iou type (iou, giou, diou, ciou)',
         dest='iou_type')
     parser.add_argument(
-        '-keep-checkpoint-max', type=int, default=10,
+        '-keep-checkpoint-max', type=int, default=2,
         help='maximum number of checkpoints to keep. If set 0, all checkpoints will be kept',
         dest='keep_checkpoint_max')
     args = vars(parser.parse_args())
@@ -560,8 +566,8 @@ def get_args(**kwargs):
 
 def init_logger(log_file=None, log_dir=None, log_level=logging.INFO, mode='w', stdout=True):
     """
-    log_dir: 日志文件的文件夹路径
-    mode: 'a', append; 'w', 覆盖原文件写入.
+    log_dir: æ—¥å¿—æ–‡ä»¶çš„æ–‡ä»¶å¤¹è·¯å¾„
+    mode: 'a', append; 'w', è¦†ç›–åŽŸæ–‡ä»¶å†™å…¥.
     """
     def get_date_str():
         now = datetime.datetime.now()
@@ -575,7 +581,7 @@ def init_logger(log_file=None, log_dir=None, log_level=logging.INFO, mode='w', s
     if not os.path.exists(log_dir):
         os.makedirs(log_dir)
     log_file = os.path.join(log_dir, log_file)
-    # 此处不能使用logging输出
+    # æ­¤å¤„ä¸èƒ½ä½¿ç”¨loggingè¾“å‡º
     print('log file path:' + log_file)
 
     logging.basicConfig(level=logging.DEBUG,
