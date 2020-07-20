@@ -1,3 +1,23 @@
+models.py
+未共享
+类型
+文本
+大小
+17 KB (16,923个字节)
+占用的空间：
+17 KB (16,923个字节)
+位置
+pytorch-YOLOv4
+所有者
+我
+上次修改
+2020年7月10日，我
+上次打开时间
+下午3:59，我自己
+创建时间：
+2020年7月10日，使用的应用：Colaboratory Runtimes
+添加说明
+查看者可以下载
 import torch
 from torch import nn
 import torch.nn.functional as F
@@ -492,13 +512,15 @@ if __name__ == "__main__":
 
     for i in range(2):  # This 'for' loop is for speed check
                         # Because the first iteration is usually longer
-        boxes = do_detect(model, sized, 0.4, 0.6, use_cuda)
-
+        boxes = do_detect(model, sized, 0.9, 0.6, use_cuda)
+    
     if namesfile == None:
         if n_classes == 20:
             namesfile = 'data/voc.names'
         elif n_classes == 80:
             namesfile = 'data/coco.names'
+        elif n_classes == 2:
+            namesfile = 'data/pedestrain.names'
         else:
             print("please give namefile")
 
