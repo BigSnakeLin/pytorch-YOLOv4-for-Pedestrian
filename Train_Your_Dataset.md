@@ -6,7 +6,7 @@ git clone https://github.com/BigSnakeLin/pytorch-YOLOv4-for-Pedestrian
 ```
 # 2. 数据准备
 
-准备train.txt,内容是图片名和box 格式如下
+准备train.txt,内容是图片名和box 格式如下,其中为了方便coco评估，图片命名为**_number.jpg,如 image_001.jpg ---> image_001.xml
 
 ```
 image_path1 x1,y1,x2,y2,id x1,y1,x2,y2,id x1,y1,x2,y2,id ...
