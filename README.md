@@ -38,6 +38,7 @@ A minimal PyTorch implementation of YOLOv4.
 
 ![image](https://user-gold-cdn.xitu.io/2020/4/26/171b5a6c8b3bd513?w=768&h=576&f=jpeg&s=78882)
 
+
 # 0. Weights Download
 
 ## 0.1 darkent
@@ -54,9 +55,7 @@ you can use darknet2pytorch to convert it yourself, or download my converted mod
     - yolov4.pth(https://drive.google.com/open?id=1wv_LiFeCRYwtpkqREPeI13-gPELBDwuJ)
     - yolov4.conv.137.pth(https://drive.google.com/open?id=1fcbR0bWzYfIEdLJPzOsn4R5mlvR6IQyA)
 
-# 1. Train
-
-[use yolov4 to train your own data](Use_yolov4_to_train_your_own_data.md)
+# 1. Train for Pedestrain Dataset
 
 1. Download weight
 2. Transform data
@@ -69,11 +68,25 @@ you can use darknet2pytorch to convert it yourself, or download my converted mod
     ...
     ...
     ```
+    For VOC dataset,you can use tool/voc_annotation.py
+     ```
+    # train.txt
+    image_path1 x1,y1,x2,y2,id x1,y1,x2,y2,id x1,y1,x2,y2,id ...
+    image_path2 x1,y1,x2,y2,id x1,y1,x2,y2,id x1,y1,x2,y2,id ...
+    ...
+    ...
+    ```
+    For Pedestrain Dataset(kaggle Pedestrain Dataset and CUHK Occlusion Dataset)
+    Dataset Download goole drive:()
+    For CUHK Occlusion Dataset,using tool/vbb2voc.py,then get voc .xml file,so you can use tool/voc_annotation.py
+    
 3. Train
 
     you can set parameters in cfg.py.
     ```
      python train.py -g [GPU_ID] -dir [Dataset direction] ...
+     python train.py -l 0.002 -g 0 -pretrained yolov4.conv.137.pth -classes 2 -dir /content/drive/My\ Drive/Pedestrain/pedestrian/ -train_label_path data/train.txt
+
     ```
 
 # 2. Inference (Evolving)
