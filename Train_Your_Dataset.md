@@ -72,4 +72,5 @@ python models.py 2 checkpoints/Yolov4_epoch150.pth data/people.jpg 320 320
 
 python models.py num_classes weightfile imagepath namefile
 ```
+# 6. 评估
 
