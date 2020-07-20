@@ -1,14 +1,12 @@
-yolov4的发布引起了不少的关注，但由于darknet是大佬c语言写的，对代码的阅读有诸多不变，所以周末的时候写了个pytorch版的(蹭一波热度)。虽然pytorch——yolov4写好已经有一段时间了，但是由于种种原因一直没有进行验证(主要就是懒)，大家提出了诸多问题帮助修复很多bug，还有大佬一起增加新的功能，感谢大家的帮助。这些天呼声最高的就是如何如何使用自己的数据进行训练，昨天又是周末，就把这件拖了很久的事做了。并不像使用很多数据，于是自己制作了一个简单的数据集。
-
 # 1. 代码准备
 
 github 克隆代码
 ```
-git clone https://github.com/Tianxiaomo/pytorch-YOLOv4.git
+git clone https://github.com/BigSnakeLin/pytorch-YOLOv4-for-Pedestrian
 ```
 # 2. 数据准备
 
-准备train.txt,内容是图片名和box。格式如下
+准备train.txt,内容是图片名和box 格式如下
 
 ```
 image_path1 x1,y1,x2,y2,id x1,y1,x2,y2,id x1,y1,x2,y2,id ...
@@ -19,28 +17,43 @@ image_path2 x1,y1,x2,y2,id x1,y1,x2,y2,id x1,y1,x2,y2,id ...
 - x1,y1 : 左上角坐标
 - x2,y2 : 右下角坐标
 - id : 物体类别
-
-我自己用的数据是自己制作的了一个小数据集，检测各种各样的硬币(也就1元，5角，1角三种)，为什么不使用其他的东西制作数据集呢，没有啊，手边只有这些硬币感觉比较合适，相对其他的东西也比较简单。
-
-![UTOOLS1590383513325.png](https://user-gold-cdn.xitu.io/2020/5/25/1724a3e953909b1b?w=1649&h=791&f=png&s=1290382)
-
-一共准备了没几张。
+数据集下载：Google Drive()
 
 # 3. 参数设置
-
-开始训练的时候我直接用原来的参数，batch size设为64，跑了几个epoch发现不对，我数据一共才二十多个。后修改网络更新策略，不是按照每个epoch的step更新，使用总的steps更新，观察loss貌似可以训练了，于是睡觉，明天再看训练如何(鬼知道我又改了啥)。
-
-今天打开电脑一看，what xx,loss收敛到2.e+4下不去了，此种必又蹊跷，遂kill了。于是把batch size直接设为4，可以正常训练了。
-
 ```
-Cfg.batch = 4
-Cfg.subdivisions = 1
+# Testing
+#batch=1
+#subdivisions=1
+# Training
+batch=64                //每次迭代要进行训练的图片数量 ,在一定范围内，一般来说Batch_Size越大，其确定的下降方向越准，引起的训练震荡越小。 
+subdivisions=8          //源码中的图片数量int imgs = net.batch * net.subdivisions * ngpus，按subdivisions大小分批进行训练 
+height=416              //输入图片高度,必须能够被32整除
+width=416               //输入图片宽度,必须能够被32整除
+channels=3              //输入图片通道数
+momentum=0.9            //冲量
+decay=0.0005            //权值衰减
+angle=0                 //图片角度变化，单位为度,假如angle=5，就是生成新图片的时候随机旋转-5~5度    
+saturation = 1.5        //饱和度变化大小
+exposure = 1.5          //曝光变化大小
+hue=.1                  //色调变化范围，tiny-yolo-voc.cfg中-0.1~0.1 
+learning_rate=0.001     //学习率
+burn_in=1000
+max_batches = 120200    //训练次数，建议设置为classes*2000，但是不要低于4000
+policy=steps            //调整学习率的策略
+//根据batch_num调整学习率，若steps=100,25000,35000，则在迭代100次，25000次，35000次时学习率发生变化，该参数与policy中的steps对应
+steps=40000,80000     // 一般设置为max_batch的80%与90%
+scales=.1,.1             //相对于当前学习率的变化比率，累计相乘，与steps中的参数个数保持一致；
+
+修改三处classes,分别位于970行、1058行与1146行，将其修改为自己数据集的目标数量；
+classes = 2
+修改三处filters,963行、1051行与1139行，将其修改为自己数据集的目标数量；
+filters = 21((5+classes)*3)
 ```
 
 # 4. 开始训练
 
 ```
- python train.py -l 0.001 -g 4 -pretrained ./yolov4.conv.137.pth -classes 3 -dir /home/OCR/coins
+ python train.py -l 0.002 -g 0 -pretrained yolov4.conv.137.pth -classes 2 -dir pedestrain
 
 -l 学习率
 -g gpu id
@@ -50,12 +63,6 @@ Cfg.subdivisions = 1
 ```
 
 
-看下loss曲线
-```
-tensorboard --logdir log --host 192.168.212.75 --port 6008
-```
-![UTOOLS1590386319240.png](https://user-gold-cdn.xitu.io/2020/5/25/1724a696148d13f3?w=1357&h=795&f=png&s=151465)
-
 # 5. 验证
 
 ```
@@ -63,20 +70,4 @@ python model.py 3 weight/Yolov4_epoch166_coins.pth data/coin2.jpg data/coins.nam
 
 python model.py num_classes weightfile imagepath namefile
 ```
-coins.names
-```
-1yuan
-5jiao
-1jiao
 
-```
-
-![UTOOLS1590386705468.png](https://user-gold-cdn.xitu.io/2020/5/25/1724a6f46e826bb8?w=774&h=1377&f=png&s=1191048)
-
-效果差强人意(训练数据只有3种类型硬币)。
-
-# 附
-
-- coins数据集 （链接：https://pan.baidu.com/s/1y701NRKSdpj6UKDIH-GpqA 
-提取码：j09s）
-- yolov4.conv.137.pth (链接：https://pan.baidu.com/s/1ovBie4YyVQQoUrC3AY0joA 提取码：kcel)
