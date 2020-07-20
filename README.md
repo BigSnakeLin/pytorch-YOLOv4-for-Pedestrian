@@ -77,7 +77,7 @@ you can use darknet2pytorch to convert it yourself, or download my converted mod
     ...
     ...
     ```
-    For VOC dataset,you can use tool/voc_annotation.py
+    For VOC dataset,you can use tool/voc2yolov4.py
      ```
     # train.txt
     image_path1 x1,y1,x2,y2,id x1,y1,x2,y2,id x1,y1,x2,y2,id ...
@@ -91,7 +91,7 @@ you can use darknet2pytorch to convert it yourself, or download my converted mod
     For CUHK Occlusion Dataset
     using tool/vbb2voc.py
     then get voc .xml file
-    so you can use tool/voc_annotation.py
+    so you can use tool/voc2yolov4.py
     ```
     
 3. Train
