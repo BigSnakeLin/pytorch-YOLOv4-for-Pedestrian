@@ -20,6 +20,7 @@ image_path2 x1,y1,x2,y2,id x1,y1,x2,y2,id x1,y1,x2,y2,id ...
 数据集下载：Google Drive()
 
 # 3. 参数设置
+## cfg/yolov4-pedestrain.cfg
 ```
 # Testing
 #batch=1
