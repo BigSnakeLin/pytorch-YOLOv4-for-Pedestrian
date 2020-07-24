@@ -151,5 +151,5 @@ python models.py num_classes weightfile imagepath namefile
 ```
 # 6. 评估
 ```
-训练150轮，map@0.5 0.61 map@0.5:0.95 0.42
+训练300轮，map@0.5 0.61 map@0.5:0.95 0.42
 ```
